@@ -4,7 +4,24 @@ I have an esxi in my infra and wold like to have VMs with docker to make tests a
 Configuring VM in order to be able to pass proxy need to be more documented on official photon doc, so this file is only here in order to compil my own investigation howto configure my special case, hope this could be usefull for other !
 Thanks 
 
-Proxy : (eolebase 2.6.1) 
+Proxy : (eolebase 2.6.1) 10.10.10.10:3128 login : myL@gin password : myP@ssword
 Photon os VM with official .OVA Linux photonos01 4.19.29-1.ph3-esx #1-photon SMP Tue Mar 19 13:44:35 UTC 2019 x86_64 GNU/Linux with
 Docker : Server Version: 18.06.2-ce
 Vmware ESXI Version d'ESXi :6.7.0 build :8169922
+Package manager : tdnf
+Package added  to the VM : git , wget , docker
+
+
+
+Tips 1 :
+With proxy and Docker Service, if your password or login include a "special caracter" in proxy in my case exemple myL@gin or myP@ssword you must not convert @ to %40 !
+
+exemple in my http-proxy.conf
+
+[service]
+Environment="http_proxy=http://myL@gin:myP@ssword@10.10.10.10:3128/" "NO_PROXY=localhost,127.0.0.1,.myDomain.LOCAL"
+
+compare to other proxy configuration file where you must convert @ to %40 to avoid that @ be interpreted as delimiteur :
+http_proxy=http://myL%40in:myP%40ssword@10.10.10.10:3128/" "NO_PROXY=localhost,127.0.0.1,.myDomain.LOCAL"
+
+thks
