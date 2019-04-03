@@ -4,20 +4,20 @@ I have an esxi in my infra and wold like to have VMs with docker to make tests a
 Configuring VM in order to be able to pass proxy need to be more documented on official photon doc, so this file is only here in order to compil my own investigation howto configure my special case, hope this could be usefull for other !
 Thanks 
 
-Proxy : (eolebase 2.6.1) 10.10.10.10:3128 login : myL@gin password : myP@ssword
+Proxy : (eolebase 2.6.1) 10.10.10.10:3128 login : myL@gin ,  password : myP@ssword
 Photon os VM with official .OVA Linux photonos01 4.19.29-1.ph3-esx #1-photon SMP Tue Mar 19 13:44:35 UTC 2019 x86_64 GNU/Linux with
 Docker : Server Version: 18.06.2-ce
 Vmware ESXI Version d'ESXi :6.7.0 build :8169922
 Package manager : tdnf
 Package added  to the VM : git , wget , docker
+-----------------------------------------------------------------------------------------------------------
 
-
-
-Tips 1 :
 ----------
+Tip Special cararter @ in password and / or login auth with proxy :
+
 With proxy and Docker Service, if your password or login include a "special caracter" in proxy in my case exemple myL@gin or myP@ssword you must not convert @ to %40 !
 
-/etc/systemd/system/docker.service.d/http-proxy.conf
+Modify /etc/systemd/system/docker.service.d/http-proxy.conf
 
 [service]
 Environment="http_proxy=http://myL@gin:myP@ssword@10.10.10.10:3128/" "NO_PROXY=localhost,127.0.0.1,.myDomain.LOCAL"
@@ -25,3 +25,25 @@ Environment="http_proxy=http://myL@gin:myP@ssword@10.10.10.10:3128/" "NO_PROXY=l
 compare to other proxy configuration file where you must convert @ to %40 to avoid that @ be interpreted as delimiteur :
 http_proxy=http://myL%40in:myP%40ssword@10.10.10.10:3128/" "NO_PROXY=localhost,127.0.0.1,.myDomain.LOCAL"
 ----------
+
+---------
+Tip TDNF repository list with proxy :
+
+Modify /etc/tdnf/tdnf.conf
+
+[main]
+gpgcheck=1
+installonly_limit=3
+clean_requirements_on_remove=true
+repodir=/etc/yum.repos.d
+cachedir=/var/cache/tdnf
+#
+#Add uncommented line because tdfn wait unicode and interpreted @ caracter as a delimiter
+#proxy="http://<proxyfqdn>:<port>"
+#http_proxy="http://myL@gin:myP@ssword@10.10.10.10:3128" --> No
+#https_proxy="http://myL@gin:myP@ssword@10.10.10.10:3128"--> No
+# @ is interpreted as a delimiteur @ -> %40
+http_proxy="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
+https_proxy="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
+# END
+
