@@ -1,0 +1,10 @@
+03 April 2019
+
+I have an esxi in my infra and wold like to have VMs with docker to make tests and Pocs but i am behind a proxy.
+Configuring VM in order to be able to pass proxy need to be more documented on official photon doc, so this file is only here in order to compil my own investigation howto configure my special case, hope this could be usefull for other !
+Thanks 
+
+Proxy : (eolebase 2.6.1) 
+Photon os VM with official .OVA Linux photonos01 4.19.29-1.ph3-esx #1-photon SMP Tue Mar 19 13:44:35 UTC 2019 x86_64 GNU/Linux with
+Docker : Server Version: 18.06.2-ce
+Vmware ESXI Version d'ESXi :6.7.0 build :8169922
