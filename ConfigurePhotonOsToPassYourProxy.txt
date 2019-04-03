@@ -18,10 +18,10 @@ Tips 1 :
 With proxy and Docker Service, if your password or login include a "special caracter" in proxy in my case exemple myL@gin or myP@ssword you must not convert @ to %40 !
 
 /etc/systemd/system/docker.service.d/http-proxy.conf
-[code]
+
 [service]
 Environment="http_proxy=http://myL@gin:myP@ssword@10.10.10.10:3128/" "NO_PROXY=localhost,127.0.0.1,.myDomain.LOCAL"
-[/code]
+
 compare to other proxy configuration file where you must convert @ to %40 to avoid that @ be interpreted as delimiteur :
 http_proxy=http://myL%40in:myP%40ssword@10.10.10.10:3128/" "NO_PROXY=localhost,127.0.0.1,.myDomain.LOCAL"
 ----------
