@@ -12,22 +12,8 @@ Package manager : tdnf
 Package added  to the VM : git , wget , docker
 -----------------------------------------------------------------------------------------------------------
 
-----------
-Tip Special cararter @ in password and / or login auth with proxy :
-
-With proxy and Docker Service, if your password or login include a "special caracter" in proxy in my case exemple myL@gin or myP@ssword you must not convert @ to %40 !
-
-Modify /etc/systemd/system/docker.service.d/http-proxy.conf
-
-[service]
-Environment="http_proxy=http://myL@gin:myP@ssword@10.10.10.10:3128/" "NO_PROXY=localhost,127.0.0.1,.myDomain.LOCAL"
-
-compare to other proxy configuration file where you must convert @ to %40 to avoid that @ be interpreted as delimiteur :
-http_proxy=http://myL%40in:myP%40ssword@10.10.10.10:3128/" "NO_PROXY=localhost,127.0.0.1,.myDomain.LOCAL"
-----------
-
 ---------
-Tip TDNF repository list with proxy :
+Tip TDNF repository list with proxy
 
 Modify /etc/tdnf/tdnf.conf
 
@@ -49,7 +35,7 @@ https_proxy="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
 -------
 
 -------
-Tip Bash Environnement :
+Tip Bash Environnement
 
 Modify /etc/bash.bashrc en add at the end of the file :
 
@@ -61,16 +47,66 @@ export https_proxy="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
 -------
 
 -------
-Tip Environnement global :
+Tip Environnement Global
 
 Modify /etc/profile en add at the end of the file :
+
 # Proxy 
 export http_proxy="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
 export https_proxy="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
 export HTTPS_PROXY="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
 export HTTP_PROXY="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
 # End /etc/profile
-
 ------
 
-Note : Reboot and check via export command to be sure environment variables are added
+------
+Tip Docker Service
+
+source https://docs.docker.com/config/daemon/systemd/
+
+ Docker daemon uses the HTTP_PROXY, HTTPS_PROXY, and NO_PROXY environmental variables in its start-up environment to configure HTTP or HTTPS proxy behavior. You cannot configure these environment variables using the daemon.json
+ 
+1.Create a systemd drop-in directory for the docker service that adds the environment variable::
+mkdir /etc/systemd/system/docker.service.d
+
+2. Modify /etc/systemd/system/docker.service.d/http-proxy.conf
+
+[Service]
+#Environment="HTTP_PROXY=http://<proxyfqdn>:<port>/"
+#Environment="HTTP_PROXY=http://myL@gin:myP@ssword@10.10.10.10:3128" --> not working ??
+Environment="http_proxy=http://myL@gin:myP@ssword@10.10.10.10:3128"
+# End http-proxy.conf
+
+3. Modify /etc/systemd/system/docker.service.d/https-proxy.conf
+
+[Service]
+#Environment="HTTPS_PROXY=http://<proxyfqdn>:<port>/"
+#Environment="HTTPS_PROXY=http://myL@gin:myP@ssword@10.10.10.10:3128" --> not working ??
+Environment="https_proxy=http://myL@gin:myP@ssword@10.10.10.10:3128"
+# End https-proxy.conf
+
+.Restart Docker services 
+systemctl restart docker
+systemctl daemon-reload
+
+Note Special caracter @ in password and / or login auth with proxy :
+
+With proxy and Docker Service, if your password or login include a "special caracter" in proxy in my case exemple myL@gin or myP@ssword you must not convert @ to %40 !
+
+Modify /etc/systemd/system/docker.service.d/http-proxy.conf
+
+[service]
+Environment="http_proxy=http://myL@gin:myP@ssword@10.10.10.10:3128/" "NO_PROXY=localhost,127.0.0.1,.myDomain.LOCAL"
+----------
+------
+
+
+Note : Remember to reboot and check via export command to be sure environment variables are added
+
+------
+Tip Wget & git no need to modify because export are permanent (to cheek again with after clonning VM)
+------
+
+
+
+
