@@ -46,4 +46,31 @@ cachedir=/var/cache/tdnf
 http_proxy="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
 https_proxy="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
 # END
+-------
 
+-------
+Tip Bash Environnement :
+
+Modify /etc/bash.bashrc en add at the end of the file :
+
+# Proxy 
+# Add uncommented line @ is interpreted as a delimiteur @ -> %40
+export http_proxy="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
+export https_proxy="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
+# End /etc/bash.bashrc
+-------
+
+-------
+Tip Environnement global :
+
+Modify /etc/profile en add at the end of the file :
+# Proxy 
+export http_proxy="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
+export https_proxy="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
+export HTTPS_PROXY="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
+export HTTP_PROXY="http://myL%40gin:myP%40ssword@10.10.10.10:3128"
+# End /etc/profile
+
+------
+
+Note : Reboot and check via export command to be sure environment variables are added
